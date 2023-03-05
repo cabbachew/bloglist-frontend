@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -77,73 +79,48 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <h2>log in to application</h2>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
-  )
+  const handleUsernameChange = ({ target }) => {
+    setUsername(target.value)
+  }
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <h2>create new</h2>
-      <div>
-        title
-        <input
-          type="text"
-          value={newTitle}
-          name="Title"
-          onChange={({ target }) => setNewTitle(target.value)}
-        />
-      </div>
-      <div>
-        author
-        <input
-          type="text"
-          value={newAuthor}
-          name="Author"
-          onChange={({ target }) => setNewAuthor(target.value)}
-        />
-      </div>
-      <div>
-        url
-        <input
-          type="text"
-          value={newUrl}
-          name="Url"
-          onChange={({ target }) => setNewUrl(target.value)}
-        />
-      </div>
-      <button type="submit">create</button>
-    </form>
-  )
+  const handlePasswordChange = ({ target }) => {
+    setPassword(target.value)
+  }
+
+  const handleTitleChange = ({ target }) => {
+    setNewTitle(target.value)
+  }
+
+  const handleAuthorChange = ({ target }) => {
+    setNewAuthor(target.value)
+  }
+
+  const handleUrlChange = ({ target }) => {
+    setNewUrl(target.value)
+  }
 
   return (
     <div>
       <Notification message={errorMessage} />
       {user === null ?
-        loginForm() :
+        <LoginForm
+          handleLogin={handleLogin}
+          username={username}
+          password={password}
+          handleUsernameChange={handleUsernameChange}
+          handlePasswordChange={handlePasswordChange}
+        /> :
         <div>
           <p>{user.name} logged in</p>
-          {blogForm()}
+          <BlogForm
+            addBlog={addBlog}
+            newTitle={newTitle}
+            newAuthor={newAuthor}
+            newUrl={newUrl}
+            handleTitleChange={handleTitleChange}
+            handleAuthorChange={handleAuthorChange}
+            handleUrlChange={handleUrlChange}
+          />
         </div>
       }
       <h2>blogs</h2>
