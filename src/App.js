@@ -15,9 +15,11 @@ const App = () => {
   const [newUrl, setNewUrl] = useState('')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    async function fetchData() {
+      const initialBlogs = await blogService.getAll()
+      setBlogs(initialBlogs)
+    }
+    fetchData()
   }, [])
 
   useEffect(() => {
