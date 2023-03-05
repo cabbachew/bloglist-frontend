@@ -103,7 +103,7 @@ const App = () => {
     <div>
       <Notification message={errorMessage} />
       {user === null ?
-        <LoginForm
+        <LoginForm 
           handleLogin={handleLogin}
           username={username}
           password={password}
@@ -111,6 +111,7 @@ const App = () => {
           handlePasswordChange={handlePasswordChange}
         /> :
         <div>
+          <h2>blogs</h2>
           <p>{user.name} logged in</p>
           <BlogForm
             addBlog={addBlog}
@@ -121,12 +122,11 @@ const App = () => {
             handleAuthorChange={handleAuthorChange}
             handleUrlChange={handleUrlChange}
           />
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} />
+          )}
         </div>
       }
-      <h2>blogs</h2>
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
-      )}
     </div>
   )
 }
