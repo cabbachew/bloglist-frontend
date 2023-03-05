@@ -112,7 +112,12 @@ const App = () => {
         /> :
         <div>
           <h2>blogs</h2>
-          <p>{user.name} logged in</p>
+          <p>{user.name} logged in
+            <button onClick={() => {
+              window.localStorage.removeItem('loggedBloglistUser')
+              setUser(null)
+            }}>logout</button>
+          </p>
           <BlogForm
             addBlog={addBlog}
             newTitle={newTitle}
