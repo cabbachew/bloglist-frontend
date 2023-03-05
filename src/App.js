@@ -23,6 +23,7 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
+      blogService.setToken(user.token)
       setUser(user)
       setUsername('')
       setPassword('')
