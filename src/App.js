@@ -8,7 +8,7 @@ import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
+  const [message, setMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -48,10 +48,15 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setMessage({ body: 'logged in', type: 'success' })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
-        setErrorMessage(exception)
+        const errorMessage = exception.response.data.error
+        setMessage({ body: errorMessage, type: 'error' })
         setTimeout(() => {
-          setErrorMessage(null)
+          setMessage(null)
         }, 5000)
     } 
   }
@@ -59,6 +64,10 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBloglistUser')
     setUser(null)
+    setMessage({ body: 'logged out', type: 'success' })
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
   }
 
   const addBlog = async (event) => {
@@ -76,10 +85,15 @@ const App = () => {
       setNewTitle('')
       setNewAuthor('')
       setNewUrl('')
-    } catch (exception) {
-      setErrorMessage('error creating blog')
+      setMessage({ body: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'success' })
       setTimeout(() => {
-        setErrorMessage(null)
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      const errorMessage = exception.response.data.error
+      setMessage({ body: errorMessage, type: 'error' })
+      setTimeout(() => {
+        setMessage(null)
       }, 5000)
     }
   }
@@ -106,15 +120,15 @@ const App = () => {
 
   return (
     <div>
-      <Notification message={errorMessage} />
+      <Notification message={message} />
       {user === null ?
-        <LoginForm 
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          handleUsernameChange={handleUsernameChange}
-          handlePasswordChange={handlePasswordChange}
-        /> :
+          <LoginForm
+            handleLogin={handleLogin}
+            username={username}
+            password={password}
+            handleUsernameChange={handleUsernameChange}
+            handlePasswordChange={handlePasswordChange}
+          /> :
         <div>
           <h2>blogs</h2>
           <p>{user.name} logged in
