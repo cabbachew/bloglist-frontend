@@ -5,16 +5,16 @@ const BlogForm = ({ createBlog }) => {
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
 
-  const addBlog = (event) => {
+  const submitBlog = (event) => {
     event.preventDefault()
     createBlog({
       title: newTitle,
       author: newAuthor,
       url: newUrl
-    }, clearFields)
+    }, submitBlogSuccess)
   }
 
-  const clearFields = () => {
+  const submitBlogSuccess = () => {
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
@@ -24,7 +24,7 @@ const BlogForm = ({ createBlog }) => {
   <div>
     <h2>create new</h2>
 
-    <form onSubmit={addBlog}>
+    <form onSubmit={submitBlog}>
       <div>
         title
         <input

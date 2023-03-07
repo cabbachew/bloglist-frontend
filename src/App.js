@@ -10,8 +10,6 @@ import loginService from './services/login'
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -31,25 +29,21 @@ const App = () => {
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    
+  const handleLogin = async (loginObject, submitLoginSuccess) => {
     try {
-      const user = await loginService.login({
-        username, password,
-      })
+      const user = await loginService.login(loginObject)
 
       window.localStorage.setItem(
         'loggedBloglistUser', JSON.stringify(user)
       )
       blogService.setToken(user.token)
       setUser(user)
-      setUsername('')
-      setPassword('')
       setMessage({ body: 'logged in', type: 'success' })
       setTimeout(() => {
         setMessage(null)
       }, 5000)
+
+      submitLoginSuccess()
     } catch (exception) {
         const errorMessage = exception.response.data.error
         setMessage({ body: errorMessage, type: 'error' })
@@ -68,7 +62,7 @@ const App = () => {
     }, 5000)
   }
 
-  const createBlog = async (blogObject, clearFields) => {
+  const createBlog = async (blogObject, submitBlogSuccess) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
@@ -77,7 +71,7 @@ const App = () => {
         setMessage(null)
       }, 5000)
 
-      clearFields()
+      submitBlogSuccess()
     } catch (exception) {
       const errorMessage = exception.response.data.error
       setMessage({ body: errorMessage, type: 'error' })
@@ -87,24 +81,12 @@ const App = () => {
     }
   }
 
-  const handleUsernameChange = ({ target }) => {
-    setUsername(target.value)
-  }
-
-  const handlePasswordChange = ({ target }) => {
-    setPassword(target.value)
-  }
-
   return (
     <div>
       <Notification message={message} />
       {user === null ?
           <LoginForm
             handleLogin={handleLogin}
-            username={username}
-            password={password}
-            handleUsernameChange={handleUsernameChange}
-            handlePasswordChange={handlePasswordChange}
           /> :
         <div>
           <h2>blogs</h2>
