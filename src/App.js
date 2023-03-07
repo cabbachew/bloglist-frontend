@@ -65,7 +65,7 @@ const App = () => {
   const createBlog = async (blogObject, submitBlogSuccess) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
-      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat({...returnedBlog, user: user}))
       setMessage({ body: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'success' })
       setTimeout(() => {
         setMessage(null)
@@ -108,7 +108,10 @@ const App = () => {
           </p>
           {blogForm()}
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+            />
           )}
         </div>
       }
