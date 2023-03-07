@@ -109,6 +109,10 @@ const App = () => {
     </Togglable>
   )
 
+  // Sort blogs by likes in descending order
+  // slice() is used to create a shallow copy because sort() mutates the original array
+  const sortedBlogs = blogs.slice().sort((a, b) => b.likes - a.likes) // Must be >0 to swap
+
   return (
     <div>
       <Notification message={message} />
@@ -124,7 +128,7 @@ const App = () => {
             </button>
           </p>
           {blogForm()}
-          {blogs.map(blog =>
+          {sortedBlogs.map(blog =>
             <Blog
               key={blog.id}
               blog={blog}
