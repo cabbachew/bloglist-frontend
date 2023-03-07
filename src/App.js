@@ -13,9 +13,6 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
 
   useEffect(() => {
     async function fetchData() {
@@ -71,21 +68,10 @@ const App = () => {
     }, 5000)
   }
 
-  const addBlog = async (event) => {
-    event.preventDefault()
-
+  const createBlog = async (blogObject) => {
     try {
-      const blogObject = {
-        title: newTitle,
-        author: newAuthor,
-        url: newUrl
-      }
-
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
       setMessage({ body: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`, type: 'success' })
       setTimeout(() => {
         setMessage(null)
@@ -105,18 +91,6 @@ const App = () => {
 
   const handlePasswordChange = ({ target }) => {
     setPassword(target.value)
-  }
-
-  const handleTitleChange = ({ target }) => {
-    setNewTitle(target.value)
-  }
-
-  const handleAuthorChange = ({ target }) => {
-    setNewAuthor(target.value)
-  }
-
-  const handleUrlChange = ({ target }) => {
-    setNewUrl(target.value)
   }
 
   return (
@@ -139,13 +113,7 @@ const App = () => {
           </p>
           <Togglable buttonLabel="new blog">
             <BlogForm
-              addBlog={addBlog}
-              newTitle={newTitle}
-              newAuthor={newAuthor}
-              newUrl={newUrl}
-              handleTitleChange={handleTitleChange}
-              handleAuthorChange={handleAuthorChange}
-              handleUrlChange={handleUrlChange}
+              createBlog={createBlog}
             />
           </Togglable>
           {blogs.map(blog =>

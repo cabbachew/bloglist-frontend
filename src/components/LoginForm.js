@@ -1,4 +1,4 @@
-const loginForm = ({
+const LoginForm = ({
   handleLogin,
   handleUsernameChange,
   handlePasswordChange,
@@ -34,4 +34,4 @@ const loginForm = ({
   )
 }
 
-export default loginForm
+export default LoginForm
