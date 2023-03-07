@@ -8,6 +8,20 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
 
+// Add an interceptor to handle expired tokens
+axios.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response.data.error === 'token expired') {
+      // Token has expired, delete it from local storage and redirect to login page
+      localStorage.removeItem('loggedBloglistUser')
+      window.location = '/'
+    }
+    console.log('error', error)
+    return Promise.reject(error)
+  }
+)
+
 const getAll = async () => {
   const response = await axios.get(baseUrl)
   return response.data
