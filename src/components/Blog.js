@@ -33,7 +33,6 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
         <br />
         {blog.user.name}
         <br />
-        {console.log(blog)}
         {currentUser.username === blog.user.username ?
           <button onClick={() => removeBlog(blog)}>remove</button> :
           null
