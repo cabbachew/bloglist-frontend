@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
   const [visible, setVisible] = useState(false)
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
@@ -32,6 +32,12 @@ const Blog = ({ blog, updateBlog }) => {
         <button onClick={incrementLike}>like</button>
         <br />
         {blog.user.name}
+        <br />
+        {console.log(blog)}
+        {currentUser.username === blog.user.username ?
+          <button onClick={() => removeBlog(blog)}>remove</button> :
+          null
+        }
       </div>
     </div>
   )

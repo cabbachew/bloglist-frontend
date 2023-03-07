@@ -99,6 +99,25 @@ const App = () => {
     }
   }
 
+  const removeBlog = async (blogObject) => {
+    if (window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}?`)) {
+      try {
+        await blogService.remove(blogObject)
+        setBlogs(blogs.filter(blog => blog.id !== blogObject.id))
+        setMessage({ body: `blog ${blogObject.title} by ${blogObject.author} removed`, type: 'success' })
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      } catch (exception) {
+        const errorMessage = exception.response.data.error
+        setMessage({ body: errorMessage, type: 'error' })
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
+      }
+    }
+  }
+
   const blogFormRef = useRef()
 
   const blogForm = () => (
@@ -133,6 +152,8 @@ const App = () => {
               key={blog.id}
               blog={blog}
               updateBlog={updateBlog}
+              removeBlog={removeBlog}
+              currentUser={user}
             />
           )}
         </div>
