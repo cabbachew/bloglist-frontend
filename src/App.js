@@ -82,6 +82,23 @@ const App = () => {
     }
   }
 
+  const updateBlog = async (blogObject) => {
+    try {
+      const returnedBlog = await blogService.update(blogObject)
+      setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog))
+      setMessage({ body: `blog ${returnedBlog.title} by ${returnedBlog.author} updated`, type: 'success' })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    } catch (exception) {
+      const errorMessage = exception.response.data.error
+      setMessage({ body: errorMessage, type: 'error' })
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
+    }
+  }
+
   const blogFormRef = useRef()
 
   const blogForm = () => (
@@ -111,6 +128,7 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
+              updateBlog={updateBlog}
             />
           )}
         </div>
