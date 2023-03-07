@@ -11,8 +11,10 @@ const BlogForm = ({ createBlog }) => {
       title: newTitle,
       author: newAuthor,
       url: newUrl
-    })
-    
+    }, clearFields)
+  }
+
+  const clearFields = () => {
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')

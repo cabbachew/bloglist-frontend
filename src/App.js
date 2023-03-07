@@ -68,7 +68,7 @@ const App = () => {
     }, 5000)
   }
 
-  const createBlog = async (blogObject) => {
+  const createBlog = async (blogObject, clearFields) => {
     try {
       const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat(returnedBlog))
@@ -76,6 +76,8 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
+
+      clearFields()
     } catch (exception) {
       const errorMessage = exception.response.data.error
       setMessage({ body: errorMessage, type: 'error' })
