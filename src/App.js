@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -70,7 +70,8 @@ const App = () => {
       setTimeout(() => {
         setMessage(null)
       }, 5000)
-
+      // Toggle visibility after post request is successful
+      blogFormRef.current.toggleVisibility()
       submitBlogSuccess()
     } catch (exception) {
       const errorMessage = exception.response.data.error
@@ -80,6 +81,16 @@ const App = () => {
       }, 5000)
     }
   }
+
+  const blogFormRef = useRef()
+
+  const blogForm = () => (
+    <Togglable buttonLabel="new blog" ref={blogFormRef}>
+      <BlogForm
+        createBlog={createBlog}
+      />
+    </Togglable>
+  )
 
   return (
     <div>
@@ -95,11 +106,7 @@ const App = () => {
               logout
             </button>
           </p>
-          <Togglable buttonLabel="new blog">
-            <BlogForm
-              createBlog={createBlog}
-            />
-          </Togglable>
+          {blogForm()}
           {blogs.map(blog =>
             <Blog key={blog.id} blog={blog} />
           )}
