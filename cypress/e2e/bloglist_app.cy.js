@@ -1,5 +1,12 @@
 describe('Bloglist app', function() {
   beforeEach(function() {
+    cy.request('POST', 'http://localhost:3000/api/testing/reset')
+    const user = {
+      name: 'Jark Manzer',
+      username: 'testuser',
+      password: 'password'
+    }
+    cy.request('POST', 'http://localhost:3000/api/users/', user)
     cy.visit('http://localhost:3000')
   })
 
@@ -8,17 +15,17 @@ describe('Bloglist app', function() {
   })
 
   it('user can login', function() {
-    cy.get('#username').type('root')
-    cy.get('#password').type('salainen')
+    cy.get('#username').type('testuser')
+    cy.get('#password').type('password')
     cy.get('#login-button').click()
 
-    cy.contains('Superuser logged in')
+    cy.contains('Jark Manzer logged in')
   })
 
   describe('when logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type('root')
-      cy.get('#password').type('salainen')
+      cy.get('#username').type('testuser')
+      cy.get('#password').type('password')
       cy.get('#login-button').click()
     })
 
