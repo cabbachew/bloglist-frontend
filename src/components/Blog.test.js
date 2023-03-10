@@ -6,6 +6,7 @@ import Blog from "./Blog"
 
 describe('<Blog />', () => {
   let container
+  let updateBlog
 
   beforeEach(() => {
     const blog = {
@@ -25,28 +26,28 @@ describe('<Blog />', () => {
     }
 
     const removeBlog = jest.fn()
-    const updatedBlog = jest.fn()
+    updateBlog = jest.fn()
 
     container = render(
       <Blog
         blog={blog}
         removeBlog={removeBlog}
-        updateBlog={updatedBlog}
+        updateBlog={updateBlog}
         currentUser={currentUser}
       />
     ).container
   })
 
   test ("renders content", () => {
-    const div = container.querySelector(".blog")
-    expect(div).toBeDefined()
-    expect(div).toHaveStyle("display: block")
-    expect(div).toHaveTextContent("Test title Test author")
+    const blogDiv = container.querySelector(".blog")
+    expect(blogDiv).toBeDefined()
+    expect(blogDiv).toHaveStyle("display: block")
+    expect(blogDiv).toHaveTextContent("Test title Test author")
 
     // Check that the blog details are not visible
-    const details = container.querySelector(".togglableContent")
-    expect(details).toHaveStyle("display: none")
-    expect(details).not.toBeVisible()
+    const detailsDiv = container.querySelector(".togglableContent")
+    expect(detailsDiv).toHaveStyle("display: none")
+    expect(detailsDiv).not.toBeVisible()
   })
 
   test ("clicking the button shows details", async () => {
@@ -57,5 +58,17 @@ describe('<Blog />', () => {
     const div = container.querySelector(".togglableContent")
     expect(div).not.toHaveStyle("display: none")
     expect(div).toBeVisible()
+  })
+
+  test ("clicking the like button twice calls event handler twice", async () => {
+    const user = userEvent.setup()
+    const viewButton = container.querySelector("button")
+    await user.click(viewButton)
+
+    const likeButton = screen.getByText("like")
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(updateBlog.mock.calls).toHaveLength(2)
   })
 })
