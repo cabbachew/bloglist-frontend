@@ -67,6 +67,12 @@ describe('Bloglist app', function() {
         cy.contains('like').click()
         cy.contains('likes 1')
       })
+
+      it('it can be deleted', function () {
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.get('html').should('not.contain', 'Exiting title Existing author')
+      })
     })
   })
 })
