@@ -42,7 +42,7 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
     method: 'POST',
     body: { title, author, url },
     headers: {
-      Authorization: `bearer ${JSON.parse(localStorage.getItem('loggedBloglistUser')).token}`
+      Authorization: `Bearer ${JSON.parse(localStorage.getItem('loggedBloglistUser')).token}`
     }
   })
 
