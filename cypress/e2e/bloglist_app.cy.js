@@ -14,19 +14,33 @@ describe('Bloglist app', function() {
     cy.contains('log in to application')
   })
 
-  it('user can login', function() {
-    cy.get('#username').type('testuser')
-    cy.get('#password').type('password')
-    cy.get('#login-button').click()
+  describe('Login',function() {
+    it('succeeds with correct credentials', function() {
+      cy.get('#username').type('testuser')
+      cy.get('#password').type('password')
+      cy.get('#login-button').click()
 
-    cy.contains('Jark Manzer logged in')
+      cy.contains('Jark Manzer logged in')
+    })
+
+    it('fails with wrong credentials', function() {
+      cy.get('#username').type('testuser')
+      cy.get('#password').type('wrong')
+      cy.get('#login-button').click()
+
+      cy.get('.error')
+        .should('contain', 'invalid username or password')
+        .and('have.css', 'color', 'rgb(159, 0, 15)') // #9F000F to RGB
+
+      cy.get('html').should('not.contain', 'Jark Manzer logged in')
+      // Alternative:
+      // cy.contains('Jark Manzer logged in').should('not.exist')
+    })
   })
 
   describe('when logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type('testuser')
-      cy.get('#password').type('password')
-      cy.get('#login-button').click()
+      cy.login({ username: 'testuser', password: 'password' })
     })
 
     it('a new blog can be created', function() {
