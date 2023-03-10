@@ -48,3 +48,11 @@ Cypress.Commands.add('createBlog', ({ title, author, url }) => {
 
   cy.visit('')
 })
+
+Cypress.Commands.add('createUser', ({ username, name, password }) => {
+  cy.request('POST', `${Cypress.env('BACKEND')}/users`, {
+    username, name, password
+  })
+
+  cy.visit('')
+})

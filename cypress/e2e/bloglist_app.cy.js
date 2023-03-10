@@ -1,13 +1,11 @@
 describe('Bloglist app', function() {
   beforeEach(function() {
     cy.request('POST', `${Cypress.env('BACKEND')}/testing/reset`)
-    const user = {
-      name: 'Jark Manzer',
+    cy.createUser({
       username: 'testuser',
+      name: 'Jark Manzer',
       password: 'password'
-    }
-    cy.request('POST', `${Cypress.env('BACKEND')}/users/`, user)
-    cy.visit('')
+    })
   })
 
   it('front page can be opened', function() {
