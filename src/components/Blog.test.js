@@ -42,6 +42,11 @@ describe('<Blog />', () => {
     expect(div).toBeDefined()
     expect(div).toHaveStyle("display: block")
     expect(div).toHaveTextContent("Test title Test author")
+
+    // Check that the blog details are not visible
+    const details = container.querySelector(".togglableContent")
+    expect(details).toHaveStyle("display: none")
+    expect(details).not.toBeVisible()
   })
 
   test ("clicking the button shows details", async () => {
