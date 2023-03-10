@@ -24,11 +24,14 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import { setToken } from '../../src/services/blogs'
+
 Cypress.Commands.add('login', ({ username, password }) => {
   cy.request('POST', `${Cypress.env('BACKEND')}/login`, {
     username, password
   }).then(({ body }) => {
     localStorage.setItem('loggedBloglistUser', JSON.stringify(body))
+    setToken(body.token)
     cy.visit('')
   })
 })
