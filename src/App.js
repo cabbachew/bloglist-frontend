@@ -85,7 +85,7 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.update(blogObject)
-      setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog))
+      setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : { ...returnedBlog, user: user }))
       setMessage({ body: `blog ${returnedBlog.title} by ${returnedBlog.author} updated`, type: 'success' })
       setTimeout(() => {
         setMessage(null)
