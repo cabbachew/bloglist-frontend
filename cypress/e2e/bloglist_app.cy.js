@@ -77,7 +77,7 @@ describe('Bloglist app', function() {
         cy.get('html').should('not.contain', 'Exiting title Existing author')
       })
 
-      it.only('it cannot be deleted by another user', function () {
+      it('it cannot be deleted by another user', function () {
         cy.contains('logout').click()
 
         cy.login({ username: 'anotheruser', password: 'password' })
@@ -85,6 +85,41 @@ describe('Bloglist app', function() {
         cy.contains('view').click()
 
         cy.contains('remove').should('not.exist')
+      })
+
+      it('it can be liked by another user', function () {
+        cy.contains('logout').click()
+
+        cy.login({ username: 'anotheruser', password: 'password' })
+
+        cy.contains('view').click()
+        cy.contains('like').click()
+        cy.contains('likes 1')
+      })
+
+      describe('and another blog exists', function () {
+        beforeEach(function () {
+          cy.createBlog({
+            title: 'Another title',
+            author: 'Another author',
+            url: 'Another url'
+          })
+        })
+
+        it.only('they are sorted by likes', function () {
+          cy.contains('Another title Another author').parent().as('anotherBlog')
+          cy.get('@anotherBlog').contains('view').click()
+          cy.get('@anotherBlog').contains('like').click()
+
+          cy.get('.blog').eq(0).contains('Another title Another author')
+
+          cy.contains('Existing title Existing author').parent().as('existingBlog')
+          cy.get('@existingBlog').contains('view').click()
+          cy.get('@existingBlog').contains('like').click()
+          cy.get('@existingBlog').contains('like').click()
+
+          cy.then.get('.blog').eq(0).contains('Existing title Existing author')
+        })
       })
     })
   })
