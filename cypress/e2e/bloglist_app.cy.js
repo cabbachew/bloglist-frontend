@@ -15,6 +15,8 @@ describe('Bloglist app', function() {
 
   it('front page can be opened', function() {
     cy.contains('log in to application')
+    cy.get('#username').should('be.visible')
+    cy.get('#password').should('be.visible')
   })
 
   describe('Login',function() {
@@ -106,7 +108,7 @@ describe('Bloglist app', function() {
           })
         })
 
-        it.only('they are sorted by likes', function () {
+        it('they are sorted by likes', function () {
           cy.contains('Another title Another author').parent().as('anotherBlog')
           cy.get('@anotherBlog').contains('view').click()
           cy.get('@anotherBlog').contains('like').click()
@@ -118,7 +120,7 @@ describe('Bloglist app', function() {
           cy.get('@existingBlog').contains('like').click()
           cy.get('@existingBlog').contains('like').click()
 
-          cy.then.get('.blog').eq(0).contains('Existing title Existing author')
+          cy.get('.blog').eq(0).contains('Existing title Existing author')
         })
       })
     })
