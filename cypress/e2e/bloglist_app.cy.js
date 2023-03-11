@@ -6,6 +6,11 @@ describe('Bloglist app', function() {
       name: 'Jark Manzer',
       password: 'password'
     })
+    cy.createUser({
+      username: 'anotheruser',
+      name: 'Another User',
+      password: 'password'
+    })
   })
 
   it('front page can be opened', function() {
@@ -54,7 +59,7 @@ describe('Bloglist app', function() {
     describe('and a blog exists', function () {
       beforeEach(function () {
         cy.createBlog({
-          title: 'Exiting title',
+          title: 'Existing title',
           author: 'Existing author',
           url: 'Existing url'
         })
@@ -66,10 +71,20 @@ describe('Bloglist app', function() {
         cy.contains('likes 1')
       })
 
-      it('it can be deleted', function () {
+      it('it can be deleted by associated user', function () {
         cy.contains('view').click()
         cy.contains('remove').click()
         cy.get('html').should('not.contain', 'Exiting title Existing author')
+      })
+
+      it.only('it cannot be deleted by another user', function () {
+        cy.contains('logout').click()
+
+        cy.login({ username: 'anotheruser', password: 'password' })
+
+        cy.contains('view').click()
+
+        cy.contains('remove').should('not.exist')
       })
     })
   })
