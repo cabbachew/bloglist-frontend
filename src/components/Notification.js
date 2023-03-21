@@ -1,19 +1,15 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 const Notification = ({ message }) => {
   if (message === null) {
-    return null
+    return null;
   }
 
-  return (
-    <div className={message.type}>
-      {message.body}
-    </div>
-  )
-}
+  return <div className={message.type}>{message.body}</div>;
+};
 
 Notification.propTypes = {
-  message: PropTypes.object
-}
+  message: PropTypes.object,
+};
 
-export default Notification
+export default Notification;

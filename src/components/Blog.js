@@ -1,32 +1,36 @@
-import { useState } from 'react'
-import PropTypes from 'prop-types'
+import { useState } from "react";
+import PropTypes from "prop-types";
 
 const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(false);
 
-  const hideWhenVisible = { display: visible ? 'none' : '' }
-  const showWhenVisible = { display: visible ? '' : 'none' }
+  const hideWhenVisible = { display: visible ? "none" : "" };
+  const showWhenVisible = { display: visible ? "" : "none" };
 
   const toggleVisibility = () => {
-    setVisible(!visible)
-  }
+    setVisible(!visible);
+  };
 
   const incrementLike = () => {
     const updatedBlog = {
       ...blog,
-      likes: blog.likes + 1
-    }
-    updateBlog(updatedBlog)
-  }
+      likes: blog.likes + 1,
+    };
+    updateBlog(updatedBlog);
+  };
 
   return (
     <div className="blog">
       <div>
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility} style={hideWhenVisible}>view</button>
-        <button onClick={toggleVisibility} style={showWhenVisible}>hide</button>
+        <button onClick={toggleVisibility} style={hideWhenVisible}>
+          view
+        </button>
+        <button onClick={toggleVisibility} style={showWhenVisible}>
+          hide
+        </button>
       </div>
-      <div style={showWhenVisible} className='togglableContent'>
+      <div style={showWhenVisible} className="togglableContent">
         {blog.url}
         <br />
         likes {blog.likes}
@@ -34,20 +38,19 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
         <br />
         {blog.user.name}
         <br />
-        {currentUser.username === blog.user.username ?
-          <button onClick={() => removeBlog(blog)}>remove</button> :
-          null
-        }
+        {currentUser.username === blog.user.username ? (
+          <button onClick={() => removeBlog(blog)}>remove</button>
+        ) : null}
       </div>
     </div>
-  )
-}
+  );
+};
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   updateBlog: PropTypes.func.isRequired,
   removeBlog: PropTypes.func.isRequired,
-  currentUser: PropTypes.object.isRequired
-}
+  currentUser: PropTypes.object.isRequired,
+};
 
-export default Blog
+export default Blog;
