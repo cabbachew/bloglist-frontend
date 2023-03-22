@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setNotificationFor } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
@@ -9,8 +11,10 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [message, setMessage] = useState(null);
   const [user, setUser] = useState(null);
+  // const [message, setMessage] = useState(null);
+  const message = useSelector((state) => state.notification);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     async function fetchData() {
@@ -36,50 +40,61 @@ const App = () => {
       window.localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
       blogService.setToken(user.token);
       setUser(user);
-      setMessage({ body: "logged in", type: "success" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      // setMessage({ body: "logged in", type: "success" });
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
+      dispatch(setNotificationFor("logged in", "success", 5));
 
       submitLoginSuccess();
     } catch (exception) {
       const errorMessage = exception.response.data.error;
-      setMessage({ body: errorMessage, type: "error" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      // setMessage({ body: errorMessage, type: "error" });
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
+      dispatch(setNotificationFor(errorMessage, "error", 5));
     }
   };
 
   const handleLogout = () => {
     window.localStorage.removeItem("loggedBloglistUser");
     setUser(null);
-    setMessage({ body: "logged out", type: "success" });
-    setTimeout(() => {
-      setMessage(null);
-    }, 5000);
+    // setMessage({ body: "logged out", type: "success" });
+    // setTimeout(() => {
+    //   setMessage(null);
+    // }, 5000);
+    dispatch(setNotificationFor("logged out", "success", 5));
   };
 
   const createBlog = async (blogObject, submitBlogSuccess) => {
     try {
       const returnedBlog = await blogService.create(blogObject);
       setBlogs(blogs.concat({ ...returnedBlog, user: user }));
-      setMessage({
-        body: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-        type: "success",
-      });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      // setMessage({
+      //   body: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+      //   type: "success",
+      // });
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
+      dispatch(
+        setNotificationFor(
+          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
+          "success",
+          5
+        )
+      );
       // Toggle visibility after post request is successful
       blogFormRef.current.toggleVisibility();
       submitBlogSuccess();
     } catch (exception) {
       const errorMessage = exception.response.data.error;
-      setMessage({ body: errorMessage, type: "error" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      // setMessage({ body: errorMessage, type: "error" });
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
+      dispatch(setNotificationFor(errorMessage, "error", 5));
     }
   };
 
@@ -91,19 +106,27 @@ const App = () => {
           blog.id !== returnedBlog.id ? blog : { ...returnedBlog, user: user }
         )
       );
-      setMessage({
-        body: `blog ${returnedBlog.title} by ${returnedBlog.author} updated`,
-        type: "success",
-      });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      // setMessage({
+      //   body: `blog ${returnedBlog.title} by ${returnedBlog.author} updated`,
+      //   type: "success",
+      // });
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
+      dispatch(
+        setNotificationFor(
+          `blog ${returnedBlog.title} by ${returnedBlog.author} updated`,
+          "success",
+          5
+        )
+      );
     } catch (exception) {
       const errorMessage = exception.response.data.error;
-      setMessage({ body: errorMessage, type: "error" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+      // setMessage({ body: errorMessage, type: "error" });
+      // setTimeout(() => {
+      //   setMessage(null);
+      // }, 5000);
+      dispatch(setNotificationFor(errorMessage, "error", 5));
     }
   };
 
@@ -114,19 +137,27 @@ const App = () => {
       try {
         await blogService.remove(blogObject);
         setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
-        setMessage({
-          body: `blog ${blogObject.title} by ${blogObject.author} removed`,
-          type: "success",
-        });
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
+        // setMessage({
+        //   body: `blog ${blogObject.title} by ${blogObject.author} removed`,
+        //   type: "success",
+        // });
+        // setTimeout(() => {
+        //   setMessage(null);
+        // }, 5000);
+        dispatch(
+          setNotificationFor(
+            `blog ${blogObject.title} by ${blogObject.author} removed`,
+            "success",
+            5
+          )
+        );
       } catch (exception) {
         const errorMessage = exception.response.data.error;
-        setMessage({ body: errorMessage, type: "error" });
-        setTimeout(() => {
-          setMessage(null);
-        }, 5000);
+        // setMessage({ body: errorMessage, type: "error" });
+        // setTimeout(() => {
+        //   setMessage(null);
+        // }, 5000);
+        dispatch(setNotificationFor(errorMessage, "error", 5));
       }
     }
   };
