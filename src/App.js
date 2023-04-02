@@ -9,7 +9,7 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
-import { initializeBlogs, appendBlog } from "./reducers/blogReducer";
+import { initializeBlogs, createBlog } from "./reducers/blogReducer";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -55,81 +55,27 @@ const App = () => {
     dispatch(setNotificationFor("logged out", "success", 5));
   };
 
-  const createBlog = async (blogObject, submitBlogSuccess) => {
-    try {
-      const returnedBlog = await blogService.create(blogObject);
-      // setBlogs(blogs.concat({ ...returnedBlog, user: user }));
-      dispatch(appendBlog({ ...returnedBlog, user: user }));
-
-      dispatch(
-        setNotificationFor(
-          `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
-          "success",
-          5
-        )
-      );
-      // Toggle visibility after post request is successful
-      blogFormRef.current.toggleVisibility();
-      submitBlogSuccess();
-    } catch (exception) {
-      const errorMessage = exception.response.data.error;
-
-      dispatch(setNotificationFor(errorMessage, "error", 5));
-    }
-  };
-
-  const updateBlog = async (blogObject) => {
-    try {
-      const returnedBlog = await blogService.update(blogObject);
-      // setBlogs(
-      //   blogs.map((blog) =>
-      //     blog.id !== returnedBlog.id ? blog : { ...returnedBlog, user: user }
-      //   )
-      // );
-
-      dispatch(
-        setNotificationFor(
-          `blog ${returnedBlog.title} by ${returnedBlog.author} updated`,
-          "success",
-          5
-        )
-      );
-    } catch (exception) {
-      const errorMessage = exception.response.data.error;
-
-      dispatch(setNotificationFor(errorMessage, "error", 5));
-    }
-  };
-
-  const removeBlog = async (blogObject) => {
-    if (
-      window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}?`)
-    ) {
-      try {
-        await blogService.remove(blogObject);
-        // setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
-
-        dispatch(
-          setNotificationFor(
-            `blog ${blogObject.title} by ${blogObject.author} removed`,
-            "success",
-            5
-          )
-        );
-      } catch (exception) {
-        const errorMessage = exception.response.data.error;
-        dispatch(setNotificationFor(errorMessage, "error", 5));
-      }
-    }
-  };
-
   const blogFormRef = useRef();
 
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
-      <BlogForm createBlog={createBlog} />
+      <BlogForm handleCreate={handleCreate} />
     </Togglable>
   );
+
+  const handleCreate = async (blogObject, submitBlogSuccess) => {
+    try {
+      await dispatch(createBlog(blogObject, user));
+      dispatch(
+        setNotificationFor(`a new blog ${blogObject.title} added`, "success", 5)
+      );
+      blogFormRef.current.toggleVisibility();
+      submitBlogSuccess();
+    } catch (exception) {
+      const errorMessage = exception.response.data.error;
+      dispatch(setNotificationFor(errorMessage, "error", 5));
+    }
+  };
 
   // Sort blogs by likes in descending order
   // slice() is used to create a shallow copy because sort() mutates the original array
@@ -152,8 +98,8 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              updateBlog={updateBlog}
-              removeBlog={removeBlog}
+              // updateBlog={updateBlog}
+              // removeBlog={removeBlog}
               currentUser={user}
             />
           ))}

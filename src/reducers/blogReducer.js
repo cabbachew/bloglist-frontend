@@ -34,4 +34,11 @@ export const initializeBlogs = () => {
   };
 };
 
+export const createBlog = (blogObject, user) => {
+  return async (dispatch) => {
+    const newBlog = await blogService.create(blogObject);
+    dispatch(appendBlog({ ...newBlog, user }));
+  };
+};
+
 export default blogSlice.reducer;
