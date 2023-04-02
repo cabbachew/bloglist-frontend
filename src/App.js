@@ -9,7 +9,12 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
-import { initializeBlogs, createBlog } from "./reducers/blogReducer";
+import {
+  initializeBlogs,
+  createBlog,
+  likeBlog,
+  deleteBlog,
+} from "./reducers/blogReducer";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -69,11 +74,49 @@ const App = () => {
       dispatch(
         setNotificationFor(`a new blog ${blogObject.title} added`, "success", 5)
       );
+      // Hide blog form after successful blog creation
       blogFormRef.current.toggleVisibility();
+      // Reset form fields after successful blog creation
       submitBlogSuccess();
     } catch (exception) {
       const errorMessage = exception.response.data.error;
       dispatch(setNotificationFor(errorMessage, "error", 5));
+    }
+  };
+
+  const handleLike = async (blogObject) => {
+    try {
+      await dispatch(likeBlog(blogObject, user));
+      dispatch(
+        setNotificationFor(
+          `blog ${blogObject.title} by ${blogObject.author} liked`,
+          "success",
+          5
+        )
+      );
+    } catch (exception) {
+      const errorMessage = exception.response.data.error;
+      dispatch(setNotificationFor(errorMessage, "error", 5));
+    }
+  };
+
+  const handleRemove = async (blogObject) => {
+    if (
+      window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`)
+    ) {
+      try {
+        await dispatch(deleteBlog(blogObject));
+        dispatch(
+          setNotificationFor(
+            `blog ${blogObject.title} by ${blogObject.author} removed`,
+            "success",
+            5
+          )
+        );
+      } catch (exception) {
+        const errorMessage = exception.response.data.error;
+        dispatch(setNotificationFor(errorMessage, "error", 5));
+      }
     }
   };
 
@@ -98,8 +141,8 @@ const App = () => {
             <Blog
               key={blog.id}
               blog={blog}
-              // updateBlog={updateBlog}
-              // removeBlog={removeBlog}
+              handleLike={handleLike}
+              handleRemove={handleRemove}
               currentUser={user}
             />
           ))}

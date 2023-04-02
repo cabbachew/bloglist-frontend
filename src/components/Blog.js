@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
+const Blog = ({ blog, handleLike, handleRemove, currentUser }) => {
   const [visible, setVisible] = useState(false);
 
   const hideWhenVisible = { display: visible ? "none" : "" };
@@ -12,11 +12,11 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
   };
 
   const incrementLike = () => {
-    const updatedBlog = {
+    const likedBlog = {
       ...blog,
       likes: blog.likes + 1,
     };
-    updateBlog(updatedBlog);
+    handleLike(likedBlog);
   };
 
   return (
@@ -39,7 +39,7 @@ const Blog = ({ blog, updateBlog, removeBlog, currentUser }) => {
         {blog.user.name}
         <br />
         {currentUser.username === blog.user.username ? (
-          <button onClick={() => removeBlog(blog)}>remove</button>
+          <button onClick={() => handleRemove(blog)}>remove</button>
         ) : null}
       </div>
     </div>
