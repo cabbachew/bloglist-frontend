@@ -9,20 +9,27 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
+import { initializeBlogs, appendBlog } from "./reducers/blogReducer";
+
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  // const [blogs, setBlogs] = useState([]);
+  const blogs = useSelector((state) => state.blogs);
   const [user, setUser] = useState(null);
   // const [message, setMessage] = useState(null);
   const message = useSelector((state) => state.notification);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    async function fetchData() {
-      const initialBlogs = await blogService.getAll();
-      setBlogs(initialBlogs);
-    }
-    fetchData();
-  }, []);
+    dispatch(initializeBlogs());
+  }, [dispatch]);
+
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const initialBlogs = await blogService.getAll();
+  //     setBlogs(initialBlogs);
+  //   }
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBloglistUser");
@@ -70,7 +77,8 @@ const App = () => {
   const createBlog = async (blogObject, submitBlogSuccess) => {
     try {
       const returnedBlog = await blogService.create(blogObject);
-      setBlogs(blogs.concat({ ...returnedBlog, user: user }));
+      // setBlogs(blogs.concat({ ...returnedBlog, user: user }));
+      dispatch(appendBlog({ ...returnedBlog, user: user }));
       // setMessage({
       //   body: `a new blog ${returnedBlog.title} by ${returnedBlog.author} added`,
       //   type: "success",
@@ -101,11 +109,11 @@ const App = () => {
   const updateBlog = async (blogObject) => {
     try {
       const returnedBlog = await blogService.update(blogObject);
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id !== returnedBlog.id ? blog : { ...returnedBlog, user: user }
-        )
-      );
+      // setBlogs(
+      //   blogs.map((blog) =>
+      //     blog.id !== returnedBlog.id ? blog : { ...returnedBlog, user: user }
+      //   )
+      // );
       // setMessage({
       //   body: `blog ${returnedBlog.title} by ${returnedBlog.author} updated`,
       //   type: "success",
@@ -136,7 +144,7 @@ const App = () => {
     ) {
       try {
         await blogService.remove(blogObject);
-        setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
+        // setBlogs(blogs.filter((blog) => blog.id !== blogObject.id));
         // setMessage({
         //   body: `blog ${blogObject.title} by ${blogObject.author} removed`,
         //   type: "success",
